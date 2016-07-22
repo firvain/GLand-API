@@ -1,0 +1,59 @@
+{
+  "name": "GLand-api",
+  "version": "1.0.0",
+  "description": "REST API for Gland",
+  "private": true,
+  "main": "app.js",
+  "scripts": {
+    "start": "cross-env NODE_ENV=development DEBUG=GLand-API,express:* nodemon ./app.js",
+    "prod": "cross-env NODE_ENV=production node ./app.js",
+    "test": "karma start test/karma.conf.js --single-run"
+  },
+  "homepage": "https://github.com/firvain/GLand-API",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/firvain/GLand-API.git"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "bluebird": "^3.4.1",
+    "body-parser": "~1.15.2",
+    "compression": "^1.6.2",
+    "cookie-parser": "~1.4.3",
+    "cors": "^2.7.1",
+    "dbgeo": "^1.0.0",
+    "debug": "~2.2.0",
+    "express": "~4.14.0",
+    "lodash": "^4.13.1",
+    "morgan": "~1.7.0",
+    "pg-monitor": "^0.5.11",
+    "pg-promise": "^5.2.4",
+    "winston": "^2.2.0",
+    "winston-daily-rotate-file": "^1.1.5"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "cross-env": "^2.0.0",
+    "eslint": "^3.1.1",
+    "eslint-config-airbnb": "^9.0.1",
+    "eslint-plugin-import": "^1.11.1",
+    "eslint-plugin-jsx-a11y": "^2.0.1",
+    "eslint-plugin-react": "^5.2.2",
+    "function-bind": "^1.1.0",
+    "karma": "^1.1.1",
+    "karma-chai": "^0.1.0",
+    "karma-mocha": "^1.1.1",
+    "karma-phantomjs-launcher": "^1.0.1",
+    "karma-sinon": "^1.0.5",
+    "karma-sinon-chai": "^1.2.3",
+    "karma-spec-reporter": "0.0.26",
+    "mocha": "^2.5.3",
+    "nodemon": "^1.9.2",
+    "phantomjs-prebuilt": "^2.1.7",
+    "sinon": "^1.17.4",
+    "sinon-chai": "^2.8.0"
+  },
+  "engines": {
+    "node": ">= 6.0.0"
+  }
+}
