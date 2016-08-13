@@ -56,28 +56,26 @@ SELECT
     'short', listings.short,
     'pets', listings.pets,
     'price', listings.price
-  ) AS listing,
-  json_build_object(
-    'id', users.id,
-    'first_name', users.first_name,
-    'last_name', users.last_name,
-    'phone', users.phone,
-    'fax', users.fax,
-    'email', users.email,
-    'street_name', users.street_name,
-    'street_number', users.street_number,
-    'ps_code', users.ps_code,
-    'city', users.city,
-    'country', users.country,
-    'is_active', users.is_active,
-    'is_agency', users.is_agency
-  ) AS user
+  ) AS listing
 FROM
   listings
   INNER JOIN estates ON (listings.estates_gid = estates.gid)
   INNER JOIN categories ON (estates.category_id = categories.id)
-  INNER JOIN estates_users ON (estates.gid = estates_users.estates_gid)
-  INNER JOIN users ON (estates_users.users_id = users.id)
-
   WHERE
-    estates.gid = ${gid}
+    listings.sale = ${sale}
+  AND
+    estates.category_id = ${categoryId}
+  AND
+    listings.price BETWEEN ${priceStart} AND ${priceEnd}
+  AND
+    estates.living_area BETWEEN ${areaStart} AND ${areaEnd}
+  AND
+  estates.furnished IN (${furnished^})
+  AND
+  estates.has_view IN (${hasView^})
+  AND
+  estates.parking IN (${parking^})
+  AND
+  estates.heating_system IN (${heatingSystem^})
+  AND
+  estates.air_condition IN (${airCondition^})

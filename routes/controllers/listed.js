@@ -1,37 +1,43 @@
 const express = require('express');
 const router = express.Router(); // eslint-disable-line
 const db = require('../../utils/pg-promise-init.js').db;
+const pgp = require('../../utils/pg-promise-init.js').pgp;
 // cons moment = require('moment');
 const query = require('../../sql/index').listed;
 const _ = require('lodash');
 const dbgeo = require('dbgeo');
-
+const error404 = {
+  message: 'Not Found',
+  error: {
+    status: 404,
+  },
+};
 router.route('/listed')
-.get((req, res) => {
-  db.any(query.all)
-  .then((data) => {
-    if (data.length === 0) {
-      res.status(404);
-    } else {
-      dbgeo.parse(
-        data,
-        {
-          geometryType: 'geojson',
-          geometryColumn: 'geom',
-        },
-        (error, result) => {
-          res.status(200).json(result);
-          return true;
+  .get((req, res) => {
+    db.any(query.all)
+      .then((data) => {
+        if (data.length === 0) {
+          res.status(404).json(error404);
+        } else {
+          dbgeo.parse(
+            data,
+            {
+              geometryType: 'geojson',
+              geometryColumn: 'geom',
+            },
+            (error, result) => {
+              res.status(200).json(result);
+              return true;
+            });
+        }
+      })
+      .catch((error) => {
+        res.status(500).json({
+          success: false,
+          error: error.message || error,
         });
-    }
+      });
   })
-  .catch((error) => {
-    res.status(500).json({
-      success: false,
-      error: error.message || error,
-    });
-  });
-})
 .post((req, res) => {
   const obj = {};
   const now = new Date();
@@ -59,16 +65,97 @@ router.route('/listed')
 });
 });
 
-router.route('/listed/:gid')
+router.route('/listed/:gid([0-9]+)')
 .get((req, res) => {
   const gid = parseInt(req.params.gid, 10);
   db.any(query.find, { gid })
   .then((data) => {
     if (data.length === 0) {
-      res.status(404);
+      res.status(404).json(error404);
     } else {
       dbgeo.parse(
         data,
+        {
+          geometryType: 'geojson',
+          geometryColumn: 'geom',
+        },
+        (error, result) => {
+          res.status(200).json(result);
+          return true;
+        });
+    }
+  })
+  .catch((error) => {
+    res.status(500).json({
+      success: false,
+      error: error.message || error,
+    });
+  });
+});
+router.route('/listed/search') //eslint-disable-line
+.get((req, res) => {
+  const queryParams = req.query;
+  function defaultValues({
+    sale = false,
+    categoryId = 2,
+    priceStart = 0,
+    priceEnd = 2147483647,
+    areaStart = 0,
+    areaEnd = 2147483647,
+    furnished = false,
+    heatingSystem = false,
+    airCondition = false,
+    hasView = false,
+    parking = false,
+  }) {
+    return {
+      sale: sale === 'true',
+      categoryId: parseInt(categoryId, 10),
+      priceStart: parseInt(priceStart, 10),
+      priceEnd: parseInt(priceEnd, 10),
+      areaStart: parseInt(areaStart, 10),
+      areaEnd: parseInt(areaEnd, 10),
+      furnished: furnished === 'true',
+      heatingSystem: heatingSystem === 'true',
+      airCondition: airCondition === 'true',
+      hasView: hasView === 'true',
+      parking: parking === 'true',
+    };
+  }
+  function replaceFalse() {
+    const keys = Object.keys(this);
+    for (const key of keys) {
+      if (typeof this[key] === 'boolean' && key !== 'sale' && this[key] !== true) {
+        this[key] = pgp.as.csv([true, false]);
+      }
+    }
+  }
+  const data = defaultValues(queryParams);
+  replaceFalse.call(data);
+  // const values = [true, false];
+  // // const vTrue = [true];
+  // // const vFalse = [false];
+  // const data = {
+  //   sale: queryParams.sale || false,
+  //   categoryId: parseInt(queryParams.categoryId, 10),
+  //   priceStart: 0,
+  //   priceEnd: 80000,
+  //   areaStart: 0,
+  //   areaEnd: 500000,
+  //   furnished: pgp.as.csv(values),
+  //   hasView: pgp.as.csv(values),
+  //   parking: pgp.as.csv(values),
+  //   heatingSystem: true,
+  //   airCondition: pgp.as.csv(values),
+  // };
+  // const gid = parseInt(req.params.gid, 10);
+  db.any(query.search, data)
+  .then((response) => {
+    if (response.length === 0) {
+      res.status(404).end();
+    } else {
+      dbgeo.parse(
+        response,
         {
           geometryType: 'geojson',
           geometryColumn: 'geom',

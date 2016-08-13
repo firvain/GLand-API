@@ -40,7 +40,7 @@ router.route('/users')
   db.any(query.all)
   .then((data) => {
     if (data.length === 0) {
-      res.status(404);
+      res.status(404).end();
     } else {
       res.status(200).json(data);
     }
