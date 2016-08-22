@@ -66,5 +66,6 @@ module.exports = {
     all: sql('listed/all.sql'),
     find: sql('listed/find.sql'),
     search: sql('listed/search.sql'),
+    count: sql('listed/count.sql'),
   },
 };

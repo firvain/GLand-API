@@ -58,6 +58,6 @@ SELECT
     'price', listings.price
   ) AS listing
 FROM
-  ${schema~}.listings
-  INNER JOIN ${schema~}.estates ON (${schema~}.listings.estates_gid = ${schema~}.estates.gid)
-  INNER JOIN ${schema~}.categories ON (${schema~}.estates.category_id = ${schema~}.categories.id)
+  listings
+  INNER JOIN estates ON (listings.estates_gid = estates.gid)
+  INNER JOIN categories ON (estates.category_id = categories.id)
