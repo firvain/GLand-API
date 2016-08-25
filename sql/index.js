@@ -67,5 +67,9 @@ module.exports = {
     find: sql('listed/find.sql'),
     search: sql('listed/search.sql'),
     count: sql('listed/count.sql'),
+    prices: sql('listed/prices.sql'),
+  },
+  isochrones: {
+    find: sql('isochrones/find.sql'),
   },
 };

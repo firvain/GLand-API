@@ -1,4 +1,5 @@
 const express = require('express');
+
 const router = express.Router(); // eslint-disable-line
 const db = require('../../utils/pg-promise-init.js').db;
 const query = require('../../sql/index').properties;

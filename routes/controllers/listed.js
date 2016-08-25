@@ -97,6 +97,7 @@ router.route('/listed/:gid([0-9]+)')
 router.route('/listed/search') //eslint-disable-line
 .get((req, res) => {
   const queryParams = req.query;
+  console.log('queryParams', queryParams);
   function defaultValues({
     sale = false,
     categoryId = 2,
@@ -177,7 +178,43 @@ router.route('/listed/search') //eslint-disable-line
 });
 router.route('/listed/stats/count')
 .get((req, res) => {
-  db.any(query.count)
+  const queryParams = req.query;
+  function defaultValues({
+    sale = true,
+  }) {
+    return {
+      sale: sale === 'true',
+    };
+  }
+  const data = defaultValues(queryParams);
+  db.any(query.count, data)
+  .then((response) => {
+    if (response.length === 0) {
+      res.status(404).end();
+    } else {
+      console.log('response', response);
+      res.status(200).json(response);
+    }
+  })
+  .catch((error) => {
+    res.status(500).json({
+      success: false,
+      error: error.message || error,
+    });
+  });
+});
+router.route('/listed/stats/prices')
+.get((req, res) => {
+  const queryParams = req.query;
+  function defaultValues({
+    sale = true,
+  }) {
+    return {
+      sale: sale === 'true',
+    };
+  }
+  const data = defaultValues(queryParams);
+  db.any(query.prices, data)
   .then((response) => {
     if (response.length === 0) {
       res.status(404).end();

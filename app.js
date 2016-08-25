@@ -10,6 +10,7 @@ const http = require('http');
 const logger = require('./utils/logger');
 const compress = require('compression');
 const v1 = require('./routes/v1');
+
 const app = express();
 app.use(compress());
 app.use(cors());
