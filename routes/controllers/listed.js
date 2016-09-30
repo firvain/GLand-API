@@ -96,15 +96,15 @@ router.route('/listed/:gid([0-9]+)')
 });
 router.route('/listed/search') //eslint-disable-line
 .get((req, res) => {
-  const queryParams = req.query;
+  const queryParams = req.query.data;
   console.log('queryParams', queryParams);
   function defaultValues({
     sale = false,
     categoryId = 2,
-    priceStart = 0,
-    priceEnd = 2147483647,
-    areaStart = 0,
-    areaEnd = 2147483647,
+    startPrice = 0,
+    endPrice = 2147483647,
+    startArea = 0,
+    endArea = 2147483647,
     furnished = false,
     heatingSystem = false,
     airCondition = false,
@@ -114,10 +114,10 @@ router.route('/listed/search') //eslint-disable-line
     return {
       sale: sale === 'true',
       categoryId: parseInt(categoryId, 10),
-      priceStart: parseInt(priceStart, 10),
-      priceEnd: parseInt(priceEnd, 10),
-      areaStart: parseInt(areaStart, 10),
-      areaEnd: parseInt(areaEnd, 10),
+      startPrice: parseInt(startPrice, 10),
+      endPrice: parseInt(endPrice, 10),
+      startArea: parseInt(startArea, 10),
+      endArea: parseInt(endArea, 10),
       furnished: furnished === 'true',
       heatingSystem: heatingSystem === 'true',
       airCondition: airCondition === 'true',
@@ -135,6 +135,7 @@ router.route('/listed/search') //eslint-disable-line
   }
   const data = defaultValues(queryParams);
   replaceFalse.call(data);
+  console.log('data', data);
   // const values = [true, false];
   // // const vTrue = [true];
   // // const vFalse = [false];

@@ -66,9 +66,9 @@ FROM
   AND
     estates.category_id = ${categoryId}
   AND
-    listings.price BETWEEN ${priceStart} AND ${priceEnd}
+    listings.price BETWEEN ${startPrice} AND ${endPrice}
   AND
-    estates.living_area BETWEEN ${areaStart} AND ${areaEnd}
+    estates.living_area BETWEEN ${startArea} AND ${endArea}
   AND
   estates.furnished IN (${furnished^})
   AND
