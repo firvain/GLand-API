@@ -1,0 +1,14 @@
+{
+  apps : [{
+    name        : "gLand-api",
+    script      : "./app.js",
+    watch       : true,
+    ignore_watch: "./logs",
+    env: {
+      "NODE_ENV": "development",
+    },
+    env_production : {
+       "NODE_ENV": "production"
+    }
+  }]
+}
